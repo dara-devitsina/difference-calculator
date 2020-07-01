@@ -7,31 +7,26 @@ const keys = _.uniq((keys1.concat(keys2)));
 
 const result = [];
 	for (const key of keys) {
+		const positive = `+ ${key}: ${file2[key]}`;
+		const negative = `- ${key}: ${file1[key]}`;
+		const neutral = `  ${key}: ${file1[key]}`;
+
 		if (_.has(file1, key) && _.has(file2, key)) {
 			if (file1[key] !== file2[key]) {
-				const str1 = `+ ${key}: ${file2[key]}`;
-				const str2 = `- ${key}: ${file1[key]}`;
-				result.push(str1);
-				result.push(str2);
+				result.push(positive);
+				result.push(negative);
 			} else {
-				const str = `${key}: ${file1[key]}`;
-				result.push(str);
+				result.push(neutral);
 			}
 		}
 			if (!_.has(file2, key)) {
-				const str = `- ${key}: ${file1[key]}`;
-				result.push(str);
+				result.push(negative);
 			}
 			if (!_.has(file1, key)) {
-				const str = `+ ${key}: ${file2[key]}`;
-				result.push(str);
+				result.push(positive);
 			}
 	}
-
-// console.log(result.join('\n'));
-console.log(result);
-
-
+return result.join('\n');
 };
 
 const json1 = {
