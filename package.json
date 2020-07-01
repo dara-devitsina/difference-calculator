@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/dara-devitsina/frontend-project-lvl2#readme",
   "dependencies": {
-    "commander": "^5.1.0"
+    "commander": "^5.1.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
