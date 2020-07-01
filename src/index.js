@@ -1,28 +1,31 @@
 import _ from 'lodash';
 
 const genDiff = (file1, file2) => {
-const entries1 = Object.entries(file1);
-const entries2 = Object.entries(file2);
-const entries = (entries1.concat(entries2));
-const result = [];
+const keys1 = Object.keys(file1);
+const keys2 = Object.keys(file2);
+const keys = _.uniq((keys1.concat(keys2)));
 
-	for (const [key, value] of entries) {
-		if (key[value] === key[value]) {
-			const str = `${key}: ${value}`;
-			result.push(str);
+const result = [];
+	for (const key of keys) {
+		if (_.has(file1, key) && _.has(file2, key)) {
+			if (file1[key] !== file2[key]) {
+				const str1 = `+ ${key}: ${file2[key]}`;
+				const str2 = `- ${key}: ${file1[key]}`;
+				result.push(str1);
+				result.push(str2);
+			} else {
+				const str = `${key}: ${file1[key]}`;
+				result.push(str);
+			}
 		}
-		if (!_.has(file2, key)) {
-			const str = [key, value].join(': ');
-			result.push(`- ${str}`);
-		}
-		if (!_.has(file1, key)) {
-			const str = [key, value].join(': ');
-			result.push(`+ ${str}`);
-		}
-		if (file1[key] !== file2[key]) {
-			const str = `+ ${key}: ${file2[key]}`;
-			result.push(str);
-		}
+			if (!_.has(file2, key)) {
+				const str = `- ${key}: ${file1[key]}`;
+				result.push(str);
+			}
+			if (!_.has(file1, key)) {
+				const str = `+ ${key}: ${file2[key]}`;
+				result.push(str);
+			}
 	}
 
 // console.log(result.join('\n'));
