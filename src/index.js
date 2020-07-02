@@ -2,7 +2,9 @@ import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 
-const genDiff = (file1, file2) => {
+const genDiff = (json1, json2) => {
+	const file1 = JSON.parse(json1);
+	const file2 = JSON.parse(json2);
 	const keys1 = Object.keys(file1);
 	const keys2 = Object.keys(file2);
 	const keys = _.uniq((keys1.concat(keys2)));
@@ -31,18 +33,8 @@ const genDiff = (file1, file2) => {
 	return result.join('\n');
 };
 
-const json1 = {
-	"host": "hexlet.io",
-	"timeout": 50,
-	"proxy": "123.234.53.22",
-	"follow": false
-};
-
-const json2 = {
-	"timeout": 20,
-	"verbose": true,
-	"host": "hexlet.io"
-};
+const json1 = fs.readFileSync('/home/darusya/Документы/f1.json', 'utf8');
+const json2 = fs.readFileSync('/home/darusya/Документы/f2.json', 'utf8');
 
 console.log(genDiff(json1, json2));
 
