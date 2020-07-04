@@ -14,14 +14,14 @@ test('compare 2 flat files', () => {
   // Теперь с HTML удобно работать и он не загромождает тесты.
   const result1 = genDiff(before, after);
 
-  expect(result1).toEqual({
+  expect(result1).toEqual('{
     host: hexlet.io
   + timeout: 20
   - timeout: 50
   - proxy: 123.234.53.22
   + verbose: true
   - follow: false
-});
+}');
 
 expect(genDiff('','')).toEqual('{}');
 
