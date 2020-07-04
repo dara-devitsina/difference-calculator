@@ -2,7 +2,9 @@ import fs from 'fs';
 
 import path from 'path';
 
-import genDiff from '../src/index.js';
+//import genDiff from '../src/index.js';
+
+import gendiff from '../bin/gendiff.js';
 
 test('compare 2 flat files', () => {
   // HTML находится в файле withLinks.html в директории __fixtures__
@@ -12,7 +14,7 @@ test('compare 2 flat files', () => {
   const before = fs.readFileSync(`${__dirname}/../__fixtures__/f1.json`, 'utf-8');
   const after = fs.readFileSync(`${__dirname}/../__fixtures__/f2.json`, 'utf-8');
   // Теперь с HTML удобно работать и он не загромождает тесты.
-  const result1 = genDiff(before, after);
+  const result1 = gendiff(before, after);
 
   expect(result1).toEqual({
     host: hexlet.io
@@ -23,6 +25,6 @@ test('compare 2 flat files', () => {
   - follow: false
 });
 
-expect(genDiff('','')).toEqual({});
+// expect(gendiff('','')).toEqual({});
 
 });
