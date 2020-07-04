@@ -41,5 +41,5 @@ jobs:
       env:
           CC_TEST_REPORTER_ID: 7a0369e11b7c47047e0cec45d719df1888d4497cb17139ae655b8046884424ef
       with:
-          coverageCommand: make test-coverage
+          coverageCommand: npx jest --coverage
           debug: true
