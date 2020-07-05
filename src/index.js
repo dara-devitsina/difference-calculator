@@ -25,31 +25,11 @@ const genDiff = (before, after) => {
     if (!_.has(file2, key)) {
       return [...acc, `- ${key}: ${value}`];
     }
-   // if (!_.has(file1, key)) {
-      return [...acc, `+ ${key}: ${value}`];
-    // }
-  }
-
+    return [...acc, `+ ${key}: ${value}`];
+  };
   const changes = data.reduce(cb, []);
   const result = `{\n${changes.join('\n')}\n}`;
   return result;
-
 };
-
-const file1 = {
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": false
-};
-
-const file2 = {
-  "timeout": 20,
-  "verbose": true,
-  "host": "hexlet.io"
-};
-
-//console.log(genDiff(file1, file2));
-
 
 export default genDiff;
