@@ -1,8 +1,8 @@
 timeout:
-    20
+ 20
 
 verbose:
-    true
+ true
 
 host:
-    hexlet.io
+ 'hexlet.io'

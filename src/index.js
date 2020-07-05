@@ -29,7 +29,8 @@ const genDiff = (before, after) => {
     // }
   };
   const changes = keys.reduce(cb, []);
-  console.log(changes);
+  return changes;
+  //console.log(changes);
   
   const result = changes.map((item) => {
    // console.log(item);
