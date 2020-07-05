@@ -13,6 +13,8 @@ const genDiff = (before, after) => {
       return { [key]: file1[key] };
     } return { [key]: file2[key] };
   });
+  console.log(data);
+  
 
   const cb = (acc, item) => {
     const [key, value] = Object.entries(item).flat();
@@ -29,7 +31,7 @@ const genDiff = (before, after) => {
   };
   const changes = data.reduce(cb, []);
   const result = `{\n${changes.join('\n')}\n}`;
-  return result;
+ // return result;
 };
 
 export default genDiff;
