@@ -12,15 +12,15 @@ const getDiff = (file1, file2) => {
 
       if (_.has(file1, key) && _.has(file2, key)) {
         if (file1[key] !== file2[key]) {
-          return [...acc, { ['name']: key, ['children']: file2[key], [status]: 'added' }, { ['name']: key, ['children']: file1[key], [status]: 'deleted' }];
+          return [...acc, { ['name']: key, ['value']: file2[key], [status]: 'updated', ['before']: file1[key], ['after']: file2[key] }/*, { ['name']: key, ['children']: file1[key], [status]: 'deleted' }*/];
         }
-        return [...acc, { ['name']: key, ['children']: file1[key], [status]: 'unchanged' }];
+        return [...acc, { ['name']: key, ['value']: file1[key], [status]: 'unchanged' }];
       }
       if (!_.has(file2, key)) {
-        return [...acc, { ['name']: key, ['children']: file1[key], [status]: 'deleted' }];
+        return [...acc, { ['name']: key, ['value']: file1[key], [status]: 'deleted' }];
       }
     //  if (!_.has(file1, key)) {
-        return [...acc, { ['name']: key, ['children']: file2[key], [status]: 'added' }];
+        return [...acc, { ['name']: key, ['value']: file2[key], [status]: 'added' }];
     //  } 
     }
       return [...acc, { ['name']: key, ['children']: getDiff(file1[key], file2[key]) }];
@@ -32,24 +32,24 @@ const getDiff = (file1, file2) => {
 
 const stylish = (tree) => {
   // console.log(tree);
-  const result = tree.map((child) => {
-    const entries = Object.entries(child);
-    console.log(entries);
-    
-    if (!_.isObject(child)) {
-      return `${entries[1][1]} ${entries[0][0]}: ${entries[0][1]}`
-    } return stylish(entries[0][1])
-  })
-  //console.log(result[0]);
-
+  const result = tree.reduce((acc, item) => {
+    if (item.status === 'updated') {
+      return [...acc, `+ ${item.name}: ${item.after}`, `- ${item.name}: ${item.before}`];
+    } else if (item.status === 'added') {
+      return [...acc, `+ ${item.name}: ${item.value}`];
+    } else if (item.status === 'deleted') {
+      return [...acc, `- ${item.name}: ${item.value}`];
+    } return [...acc, `  ${item.name}: ${item.value}`];
+  }, []);
+  return result;
 };
 
 const genDiff = (path1, path2) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
   const result = getDiff(file1, file2);
-  // return result;
-  console.log(result[0].children)
+  return stylish(result);
+  //console.log(result)
 };
 
 export default genDiff;
