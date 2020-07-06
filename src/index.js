@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import parse from './parsers.js';
 
- const genDiff = (before, after) => {
-  const file1 = parse(before);
-  const file2 = parse(after);
+const getDiff = (file1, file2) => {
   const keys1 = Object.keys(file1);
   const keys2 = Object.keys(file2);
-  const keys = _.uniq(keys1.concat(keys2));
+  const keys = _.union(keys1, keys2);
 
-  const changes = keys.reduce((acc, key) => {
+  const res = keys.reduce((acc, key) => {
     const char = 'char';
-    if (_.has(file1, key) && _.has(file2, key)) {
+    if (!_.isObject(file1[key]) || !_.isObject(file2[key])) {
+
+      if (_.has(file1, key) && _.has(file2, key)) {
       if (file1[key] !== file2[key]) {
         return [...acc, { [key]: file2[key], [char]: '+' }, { [key]: file1[key], [char]: '-' }];
       }
@@ -22,18 +22,22 @@ import parse from './parsers.js';
     if (!_.has(file1, key)) {
       return [...acc, { [key]: file2[key], [char]: '+' }];
     }
+    }
+
+    else {
+      return [...acc, { [key]: getDiff(file1[key], file2[key]) }]
+    }
   }, []);
-
-  console.log(changes);
- // const normalized = changes.map((item) => {
- //   const [key, value] = Object.entries(item).flat();
- //   return `${key}: ${value}`;
- // })
-
- // const result = `{\n${normalized.join('\n')}\n}`;
- // return result; 
+  return res
 };
-export default genDiff; 
+
+const genDiff = (path1, path2) => {
+  const file1 = parse(path1);
+  const file2 = parse(path2);
+  return getDiff(file1, file2);
+}
+
+export default genDiff;
 
 const before = {
   "common": {
@@ -84,4 +88,4 @@ const after = {
   }
 }
 
-//console.log(genDiff(before, after));
+// console.log(genDiff(before, after));
