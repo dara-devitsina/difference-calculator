@@ -14,7 +14,7 @@ const getDiff = (file1, file2) => {
       if (file1[key] !== file2[key]) {
         return [...acc, { [key]: file2[key], [char]: '+' }, { [key]: file1[key], [char]: '-' }];
       }
-        return [...acc, { [key]: file1[key], [char]: '  ' }];
+        return [...acc, { [key]: file1[key], [char]: ' ' }];
     }
     if (!_.has(file2, key)) {
       return [...acc, { [key]: file1[key], [char]: '-' }];
@@ -28,14 +28,26 @@ const getDiff = (file1, file2) => {
       return [...acc, { [key]: getDiff(file1[key], file2[key]) }]
     }
   }, []);
-  return res
+  return res;
+};
+
+const stylish = (tree) => {
+ // console.log(tree);
+  const result = tree.map((child) => {
+   const entries = Object.entries(child);
+   //console.log(entries);
+   return `${entries[1][1]} ${entries[0][0]}: ${entries[0][1]}`
+  })
+  console.log(result);
+  
 };
 
 const genDiff = (path1, path2) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
-  return getDiff(file1, file2);
-}
+  const result = getDiff(file1, file2);
+  return stylish(result);
+};
 
 export default genDiff;
 
