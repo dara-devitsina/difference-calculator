@@ -33,13 +33,16 @@ const getDiff = (file1, file2) => {
 const stylish = (tree) => {
   // console.log(tree);
   const result = tree.reduce((acc, item) => {
+
+if (!_.has(item, 'children')) {
     if (item.status === 'updated') {
       return [...acc, `+ ${item.name}: ${item.after}`, `- ${item.name}: ${item.before}`];
-    } else if (item.status === 'added') {
+    } if (item.status === 'added') {
       return [...acc, `+ ${item.name}: ${item.value}`];
-    } else if (item.status === 'deleted') {
+    } if (item.status === 'deleted') {
       return [...acc, `- ${item.name}: ${item.value}`];
     } return [...acc, `  ${item.name}: ${item.value}`];
+} return [...acc, `  ${item.name}: ${stylish(item.children)}`]
   }, []);
   return result;
 };
@@ -49,7 +52,7 @@ const genDiff = (path1, path2) => {
   const file2 = parse(path2);
   const result = getDiff(file1, file2);
   return stylish(result);
-  //console.log(result)
+  //console.log(stylish(result))
 };
 
 export default genDiff;
