@@ -24,10 +24,11 @@ const getDiff = (file1, file2) => {
   return diff;
 };
 
-const stringify = (item) => {
+const stringify = (item, currentDepth) => {
   if (_.isObject(item)) {
+    const space = ' ';
     const [key, value] = Object.entries(item).flat();
-      return `{\n${key}: ${value}\n}`;
+      return `{\n${space.repeat(currentDepth + 4)}${key}: ${value}\n${space.repeat(currentDepth + 2)}}`;
   }
   return item;
 };
@@ -41,13 +42,13 @@ const stylish = (tree) => {
   const result = node.reduce((acc, obj) => {
     if (obj.status !== 'nested object') {
       if (obj.status === 'added') {
-        return [...acc, `${space.repeat(depth)}+ ${obj.name}: ${stringify(obj.value)}`];
+        return [...acc, `${space.repeat(depth)}+ ${obj.name}: ${stringify(obj.value, depth)}`];
       } if (obj.status === 'deleted') {
-        return [...acc, `${space.repeat(depth)}- ${obj.name}: ${stringify(obj.value)}`];
+        return [...acc, `${space.repeat(depth)}- ${obj.name}: ${stringify(obj.value, depth)}`];
       } if (obj.status === 'modified') {
-        return [...acc, `${space.repeat(depth)}+ ${obj.name}: ${stringify(obj.after)}\n${space.repeat(depth)}- ${obj.name}: ${stringify(obj.before)}`];
+        return [...acc, `${space.repeat(depth)}+ ${obj.name}: ${stringify(obj.after, depth)}\n${space.repeat(depth)}- ${obj.name}: ${stringify(obj.before, depth)}`];
       } if (obj.status === 'unmodified') {
-        return [...acc, `${space.repeat(depth + 2)}${obj.name}: ${stringify(obj.value)}`];
+        return [...acc, `${space.repeat(depth + 2)}${obj.name}: ${stringify(obj.value, depth)}`];
       }
     }
     return [...acc, `${space.repeat(depth + 2)}${obj.name}: ${iter(obj.children, depth + 2)}`];
