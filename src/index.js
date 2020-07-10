@@ -59,17 +59,29 @@ return iter(tree, 0)
 
 const plain = (tree) => {
   const iter = (node, ancestry) => {
+    // !!! попробовать заменить reduce на map
     const result = node.reduce((acc, item) => {
       const newAncestry = [...ancestry, item.name];
-      console.log(newAncestry);
-      console.log(item.children);
-      
+     // console.log(newAncestry);
+     // console.log(item.children);
+     // !!! написать функцию stringify (должна обрабатывать строку, число, boolean или объект), заменить ифы на switch
       if (item.status !== 'nested object') {
-        return [...acc, `Property '${newAncestry.join('.')}' was added with value: '${item.value}'`]
+        if (item.status === 'added') {
+          return [...acc, `Property '${newAncestry.join('.')}' was added with value: ${item.value}`]
+        }
+        if (item.status === 'deleted') {
+          return [...acc, `Property '${newAncestry.join('.')}' was removed`]
+        }
+        if (item.status === 'modified') {
+          return [...acc, `Property '${newAncestry.join('.')}' was updated. From ${item.before} to ${item.after}`]
+        } 
+        if (item.status === 'unmodified') {
+          return [...acc, []]
+        } 
       }
       return [...acc, iter(item.children, [...newAncestry])]
     }, []);
-    return result.join('\n');
+    return result.flat().join('\n');
   }
   return iter(tree, []);
 };
