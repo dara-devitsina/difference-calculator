@@ -1,5 +1,8 @@
 import _ from 'lodash';
 import parse from './parsers.js';
+// import format from './formatters/index.js';
+import stylish from './formatters/stylish.js';
+import plain from './formatters/plain.js';
 
 const getDiff = (file1, file2) => {
   const keys1 = Object.keys(file1);
@@ -24,68 +27,6 @@ const getDiff = (file1, file2) => {
   return diff;
 };
 
-const stringify = (item, currentDepth) => {
-  if (_.isObject(item)) {
-    const space = ' ';
-    const [key, value] = Object.entries(item).flat();
-      return `{\n${space.repeat(currentDepth + 8)}${key}: ${value}\n${space.repeat(currentDepth + 4)}}`;
-  }
-  return item;
-};
-
-const stylish = (tree) => {
-  // console.log(tree);
-  const iter = (node, depth) => {
-    const space = ' ';
-    //console.log(depth);
-  const result = node.reduce((acc, obj) => {
-    if (obj.status !== 'nested object') {
-      if (obj.status === 'added') {
-        return [...acc, `${space.repeat(depth + 2)}+ ${obj.name}: ${stringify(obj.value, depth)}`];
-      } if (obj.status === 'deleted') {
-        return [...acc, `${space.repeat(depth + 2)}- ${obj.name}: ${stringify(obj.value, depth)}`];
-      } if (obj.status === 'modified') {
-        return [...acc, `${space.repeat(depth + 2)}+ ${obj.name}: ${stringify(obj.after, depth)}\n${space.repeat(depth + 2)}- ${obj.name}: ${stringify(obj.before, depth)}`];
-      } if (obj.status === 'unmodified') {
-        return [...acc, `${space.repeat(depth + 4)}${obj.name}: ${stringify(obj.value, depth)}`];
-      }
-    }
-    return [...acc, `${space.repeat(depth + 4)}${obj.name}: ${iter(obj.children, depth + 4)}`];
-  }, []);
-  return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
-}
-return iter(tree, 0)
-};
-
-const plain = (tree) => {
-  const iter = (node, ancestry) => {
-    // !!! попробовать заменить reduce на map
-    const result = node.reduce((acc, item) => {
-      const newAncestry = [...ancestry, item.name];
-     // console.log(newAncestry);
-     // console.log(item.children);
-     // !!! написать функцию stringify (должна обрабатывать строку, число, boolean или объект), заменить ифы на switch
-      if (item.status !== 'nested object') {
-        if (item.status === 'added') {
-          return [...acc, `Property '${newAncestry.join('.')}' was added with value: ${item.value}`]
-        }
-        if (item.status === 'deleted') {
-          return [...acc, `Property '${newAncestry.join('.')}' was removed`]
-        }
-        if (item.status === 'modified') {
-          return [...acc, `Property '${newAncestry.join('.')}' was updated. From ${item.before} to ${item.after}`]
-        } 
-        if (item.status === 'unmodified') {
-          return [...acc, []]
-        } 
-      }
-      return [...acc, iter(item.children, [...newAncestry])]
-    }, []);
-    return result.flat().join('\n');
-  }
-  return iter(tree, []);
-};
-
 const genDiff = (path1, path2) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
@@ -94,7 +35,6 @@ const genDiff = (path1, path2) => {
   return plain(result);
   //console.log(result[0].children);
   
-
 };
 
 export default genDiff;
