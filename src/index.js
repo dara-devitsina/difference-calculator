@@ -38,7 +38,6 @@ const stylish = (tree) => {
   const iter = (node, depth) => {
     const space = ' ';
     //console.log(depth);
-
   const result = node.reduce((acc, obj) => {
     if (obj.status !== 'nested object') {
       if (obj.status === 'added') {
@@ -53,20 +52,35 @@ const stylish = (tree) => {
     }
     return [...acc, `${space.repeat(depth + 4)}${obj.name}: ${iter(obj.children, depth + 4)}`];
   }, []);
-
   return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
-
 }
 return iter(tree, 0)
+};
+
+const plain = (tree) => {
+  const iter = (node, ancestry) => {
+    const result = node.reduce((acc, item) => {
+      const newAncestry = [...ancestry, item.name];
+      console.log(newAncestry);
+      console.log(item.children);
+      
+      if (item.status !== 'nested object') {
+        return [...acc, `Property '${newAncestry.join('.')}' was added with value: '${item.value}'`]
+      }
+      return [...acc, iter(item.children, [...newAncestry])]
+    }, []);
+    return result.join('\n');
+  }
+  return iter(tree, []);
 };
 
 const genDiff = (path1, path2) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
   const result = getDiff(file1, file2);
-  return stylish(result);
-  //return result;
-  //console.log(result);
+  //return stylish(result);
+  return plain(result);
+  //console.log(result[0].children);
   
 
 };
