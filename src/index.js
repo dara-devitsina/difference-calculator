@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import parse from './parsers.js';
-// import format from './formatters/index.js';
-import stylish from './formatters/stylish.js';
-import plain from './formatters/plain.js';
+import format from './formatters/index.js';
 
 const getDiff = (file1, file2) => {
   const keys1 = Object.keys(file1);
@@ -27,14 +25,12 @@ const getDiff = (file1, file2) => {
   return diff;
 };
 
-const genDiff = (path1, path2) => {
+
+const genDiff = (path1, path2, f) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
-  const result = getDiff(file1, file2);
-  //return stylish(result);
-  return plain(result);
-  //console.log(result[0].children);
-  
+  const diff = getDiff(file1, file2);
+  return format(diff, f);
 };
 
 export default genDiff;
