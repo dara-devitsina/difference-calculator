@@ -25,7 +25,6 @@ const getDiff = (file1, file2) => {
   return diff;
 };
 
-
 const genDiff = (path1, path2, f) => {
   const file1 = parse(path1);
   const file2 = parse(path2);

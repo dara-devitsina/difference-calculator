@@ -7,37 +7,38 @@ const stringify = (item) => {
 	if (typeof item === 'string') {
 		return `'${item}'`;
 	} if (_.isObject(item)) {
-		return `[complex value]`;
+		return '[complex value]';
 	} 
 };
 
 const plain = (tree) => {
 	const iter = (node, ancestry) => {
-		// !!! попробовать заменить reduce на map
-		const result = node.reduce((acc, item) => {
-			const newAncestry = [...ancestry, item.name];
+	
+		return node.flatMap((item) => {
+			const newAncestry = `${ancestry}${item.name}`;
 			// console.log(newAncestry);
 			// console.log(item.children);
 
 			if (item.status !== 'nested object') {
 				if (item.status === 'added') {
-					return [...acc, `Property '${newAncestry.join('.')}' was added with value: ${stringify(item.value)}`]
+					return `Property '${newAncestry}' was added with value: ${stringify(item.value)}`
 				}
 				if (item.status === 'deleted') {
-					return [...acc, `Property '${newAncestry.join('.')}' was removed`]
+					return `Property '${newAncestry}' was removed`
 				}
 				if (item.status === 'modified') {
-					return [...acc, `Property '${newAncestry.join('.')}' was updated. From ${stringify(item.before)} to ${stringify(item.after)}`]
+					return `Property '${newAncestry}' was updated. From ${stringify(item.before)} to ${stringify(item.after)}`
 				}
 				if (item.status === 'unmodified') {
-					return [...acc, []]
+					return [];
 				}
 			}
-			return [...acc, iter(item.children, [...newAncestry])]
-		}, []);
-		return result.flat().join('\n');
+			return iter(item.children, `${newAncestry}.`)
+		});
+		//return result.join('\n');
+		//return result;
 	}
-	return iter(tree, []);
+	return `${iter(tree, '').join('\n')}\n`;
 };
 
 export default plain;
