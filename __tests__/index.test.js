@@ -10,6 +10,6 @@ const __dirname = dirname(__filename);
 test('compare 2 flat json files', () => {
   const before = `${__dirname}/../__fixtures__/file1.json`;
   const after = `${__dirname}/../__fixtures__/file2.json`;
-  const result = fs.readFileSync(`${__dirname}/../__fixtures__/result-plain`, 'utf8');
-  expect(genDiff(before, after)).toBe(result);
+  const result = fs.readFileSync(`${__dirname}/../__fixtures__/result-json`, 'utf8');
+  expect(genDiff(before, after)).toMatch(result);
 });

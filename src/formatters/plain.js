@@ -10,11 +10,10 @@ const stringify = (item) => {
 		return '[complex value]';
 	} 
 };
-
 const plain = (tree) => {
 	const iter = (node, ancestry) => {
 	
-		return node.flatMap((item) => {
+		const result = node.flatMap((item) => {
 			const newAncestry = `${ancestry}${item.name}`;
 			// console.log(newAncestry);
 			// console.log(item.children);
@@ -35,10 +34,10 @@ const plain = (tree) => {
 			}
 			return iter(item.children, `${newAncestry}.`)
 		});
-		//return result.join('\n');
-		//return result;
-	}
-	return `${iter(tree, '').join('\n')}\n`;
+		return result.join('\n');
+		return result;
+	};
+	return iter(tree, '');
 };
 
 export default plain;
