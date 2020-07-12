@@ -25,11 +25,11 @@ const getDiff = (file1, file2) => {
   return diff;
 };
 
-const genDiff = (path1, path2, f) => {
+const genDiff = (path1, path2, neededFormat) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
-  const diff = getDiff(file1, file2);
-  return format(diff, f);
+  const difference = getDiff(file1, file2);
+  return format(difference, neededFormat);
 };
 
 export default genDiff;

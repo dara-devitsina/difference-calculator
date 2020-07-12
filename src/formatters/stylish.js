@@ -14,20 +14,23 @@ const stylish = (tree) => {
 	const iter = (node, depth) => {
 		const space = ' ';
 		//console.log(depth);
-		const result = node.reduce((acc, obj) => {
-			if (obj.status !== 'nested object') {
-				if (obj.status === 'added') {
-					return [...acc, `${space.repeat(depth + 2)}+ ${obj.name}: ${stringify(obj.value, depth)}`];
-				} if (obj.status === 'deleted') {
-					return [...acc, `${space.repeat(depth + 2)}- ${obj.name}: ${stringify(obj.value, depth)}`];
-				} if (obj.status === 'modified') {
-					return [...acc, `${space.repeat(depth + 2)}+ ${obj.name}: ${stringify(obj.after, depth)}\n${space.repeat(depth + 2)}- ${obj.name}: ${stringify(obj.before, depth)}`];
-				} if (obj.status === 'unmodified') {
-					return [...acc, `${space.repeat(depth + 4)}${obj.name}: ${stringify(obj.value, depth)}`];
+		const result = node.map((item) => {
+			if (item.status !== 'nested object') {
+				switch (item.status) {
+				case 'added':
+					return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value, depth)}`;
+				case 'deleted':
+					return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.value, depth)}`;
+				case 'modified':
+					return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.after, depth)}\n${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.before, depth)}`;
+				case 'unmodified':
+					return `${space.repeat(depth + 4)}${item.name}: ${stringify(item.value, depth)}`;
+				default:
+					throw new Error(`Unknown status: '${item.status}'!`);
 				}
 			}
-			return [...acc, `${space.repeat(depth + 4)}${obj.name}: ${iter(obj.children, depth + 4)}`];
-		}, []);
+			return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children, depth + 4)}`;
+		});
 		return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
 	}
 	return iter(tree, 0)

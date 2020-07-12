@@ -1,41 +1,41 @@
-import _ from 'lodash';
-
-const stringify = (item) => {
-	if (typeof item === 'boolean' || typeof item === 'number') {
+const normalize = (item) => {
+	switch (typeof item) {
+	case 'boolean':
 		return item;
-	}
-	if (typeof item === 'string') {
+	case 'number':
+		return item;
+	case 'string':
 		return `'${item}'`;
-	} if (_.isObject(item)) {
+	case 'object':
 		return '[complex value]';
+	default:
+		throw new Error(`Unknown type: '${typeof item}'!`);
 	} 
 };
+
 const plain = (tree) => {
 	const iter = (node, ancestry) => {
 	
 		const result = node.flatMap((item) => {
 			const newAncestry = `${ancestry}${item.name}`;
-			// console.log(newAncestry);
-			// console.log(item.children);
 
 			if (item.status !== 'nested object') {
-				if (item.status === 'added') {
-					return `Property '${newAncestry}' was added with value: ${stringify(item.value)}`
-				}
-				if (item.status === 'deleted') {
-					return `Property '${newAncestry}' was removed`
-				}
-				if (item.status === 'modified') {
-					return `Property '${newAncestry}' was updated. From ${stringify(item.before)} to ${stringify(item.after)}`
-				}
-				if (item.status === 'unmodified') {
+				switch (item.status) {
+				case 'added':
+					return `Property '${newAncestry}' was added with value: ${normalize(item.value)}`;
+				case 'deleted':
+					return `Property '${newAncestry}' was removed`;
+				case 'modified':
+					return `Property '${newAncestry}' was updated. From ${normalize(item.before)} to ${normalize(item.after)}`;
+				case 'unmodified':
 					return [];
+				default:
+					throw new Error(`Unknown status: '${item.status}'!`);
 				}
 			}
 			return iter(item.children, `${newAncestry}.`)
 		});
 		return result.join('\n');
-		return result;
 	};
 	return iter(tree, '');
 };
