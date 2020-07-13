@@ -9,7 +9,7 @@ const stringify = (item, currentDepth) => {
 	return item;
 };
 
-const stylish = (tree) => {
+const recursive = (tree) => {
 	// console.log(tree);
 	const iter = (node, depth) => {
 		const space = ' ';
@@ -36,4 +36,4 @@ const stylish = (tree) => {
 	return iter(tree, 0)
 };
 
-export default stylish;
+export default recursive;
