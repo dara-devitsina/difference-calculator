@@ -3,7 +3,6 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/64c6d0bb97664e516c50/test_coverage)](https://codeclimate.com/github/dara-devitsina/frontend-project-lvl2/test_coverage)
 
 Difference Calculator is a cli utility which takes 2 configuration files and outputs the report showing difference between them.  
-
 Possible file formats: json, yaml and ini
 
 ## Install ##
@@ -18,7 +17,7 @@ The report format can be specified with `-f` or `--format` option (see below), a
 
 `-f, --format plain` - the report will be generated as plain text  
 
-`-f, --format plain` - the report will be generated as JSON
+`-f, --format json` - the report will be generated as JSON
 
 ## Usage examples ##
 
