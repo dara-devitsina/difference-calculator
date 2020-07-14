@@ -1,42 +1,41 @@
 import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path'
+import path from 'path';
 
 import genDiff from '../src/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const getFixturePath = (filename) => path.join(process.cwd(), '__fixtures__', filename);
+const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-let resultStylish;
+let resultRecursive;
 let resultPlain;
 let resultJson;
 
 beforeAll(() => {
-  resultStylish = fs.readFileSync(`${__dirname}/../__fixtures__/result-stylish`, 'utf8').trimEnd();
-  resultPlain = fs.readFileSync(`${__dirname}/../__fixtures__/result-plain`, 'utf8').trimEnd();
-  resultJson = fs.readFileSync(`${__dirname}/../__fixtures__/result-json`, 'utf8').trimEnd();
+  resultRecursive = readFile('result-recursive').trimEnd();
+  resultPlain = readFile('result-plain').trimEnd();
+  resultJson = readFile('result-json').trimEnd();
 });
 
 test('compare 2 json files', () => {
-  const before = `${__dirname}/../__fixtures__/file1.json`;
-  const after = `${__dirname}/../__fixtures__/file2.json`;
-  expect(genDiff(before, after)).toEqual(resultStylish);
+  const before = getFixturePath('file1.json');
+  const after = getFixturePath('file2.json');
+  expect(genDiff(before, after)).toEqual(resultRecursive);
   expect(genDiff(before, after, 'plain')).toEqual(resultPlain);
   expect(genDiff(before, after, 'json')).toEqual(resultJson);
 });
 
 test('compare 2 yaml files', () => {
-  const before = `${__dirname}/../__fixtures__/file1.yml`;
-  const after = `${__dirname}/../__fixtures__/file2.yml`;
-  expect(genDiff(before, after)).toEqual(resultStylish);
+  const before = getFixturePath('file1.yml');
+  const after = getFixturePath('file2.yml');
+  expect(genDiff(before, after)).toEqual(resultRecursive);
   expect(genDiff(before, after, 'plain')).toEqual(resultPlain);
   expect(genDiff(before, after, 'json')).toEqual(resultJson);
 });
 
 test('compare 2 ini files', () => {
-  const before = `${__dirname}/../__fixtures__/file1.ini`;
-  const after = `${__dirname}/../__fixtures__/file2.ini`;
-  expect(genDiff(before, after)).toEqual(resultStylish);
+  const before = getFixturePath('file1.ini');
+  const after = getFixturePath('file2.ini');
+  expect(genDiff(before, after)).toEqual(resultRecursive);
   expect(genDiff(before, after, 'plain')).toEqual(resultPlain);
   expect(genDiff(before, after, 'json')).toEqual(resultJson);
 });

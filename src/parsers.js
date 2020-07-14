@@ -6,7 +6,6 @@ import ini from 'ini';
 
 const numberParse = (object) => {
   const entries = Object.entries(object);
-  // console.log(entries);
 
   const result = entries.reduce((acc, [key, value]) => {
     if (!_.isObject(value)) {

@@ -10,6 +10,9 @@ test-coverage:
 lint:
 	npx eslint .
 
+fix-lint:
+	npx eslint . --fix
+
 publish:
 	npm publish --dry-run
 

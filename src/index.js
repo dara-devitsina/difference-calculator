@@ -30,10 +30,7 @@ const getDiff = (file1, file2) => {
 const genDiff = (path1, path2, neededFormat) => {
   const file1 = parse(path1);
   const file2 = parse(path2);
-  // console.log(file1);
-
   const difference = getDiff(file1, file2);
-  // console.log(difference);
   return format(difference, neededFormat);
 };
 

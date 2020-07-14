@@ -10,10 +10,8 @@ const stringify = (item, currentDepth) => {
 };
 
 const recursive = (tree) => {
-  // console.log(tree);
   const iter = (node, depth) => {
     const space = ' ';
-    // console.log(depth);
     const result = node.map((item) => {
       if (item.status !== 'nested object') {
         switch (item.status) {
