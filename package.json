@@ -2,7 +2,7 @@
   "name": "frontend-project-lvl2",
   "version": "1.0.0",
   "description": "",
-  "main": "gendiff.js",
+  "main": "index.js",
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest"
   },
@@ -14,7 +14,7 @@
   "license": "ISC",
   "type": "module",
   "bin": {
-    "gendiff": "bin/gendiff.js"
+    "gendiff": "src/bin/gendiff.js"
   },
   "bugs": {
     "url": "https://github.com/dara-devitsina/frontend-project-lvl2/issues"

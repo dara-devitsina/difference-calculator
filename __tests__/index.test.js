@@ -3,7 +3,7 @@ import path from 'path';
 
 import genDiff from '../src/index.js';
 
-const getFixturePath = (filename) => path.join(process.cwd(), '__fixtures__', filename);
+const getFixturePath = (filename) => path.join(process.cwd(), '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
 const resultRecursive = readFile('result-recursive').trimEnd();
