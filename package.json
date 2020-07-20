@@ -1,7 +1,7 @@
 {
   "name": "frontend-project-lvl2",
   "version": "1.0.0",
-  "description": "",
+  "description": "a cli utility which takes 2 configuration files and outputs the difference between them",
   "main": "index.js",
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest"
