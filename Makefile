@@ -17,6 +17,6 @@ publish:
 	npm publish --dry-run
 
 link:
-    npm link
+	npm link
 
 .PHONY: test
