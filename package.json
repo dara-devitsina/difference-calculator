@@ -1,5 +1,5 @@
 {
-  "name": "frontend-project-lvl2",
+  "name": "@devitsina/difference-calculator",
   "version": "1.0.0",
   "description": "a cli utility which takes 2 configuration files and outputs the difference between them",
   "main": "index.js",

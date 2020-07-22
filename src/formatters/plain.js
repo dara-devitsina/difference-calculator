@@ -39,5 +39,4 @@ const plain = (tree) => {
   return iter(tree, '');
 };
 
-
 export default plain;

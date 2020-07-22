@@ -1,4 +1,4 @@
-import recursive from './recursive.js';
+import stylish from './stylish.js';
 import plain from './plain.js';
 
 const format = (diff, neededFormat) => {
@@ -8,7 +8,7 @@ const format = (diff, neededFormat) => {
     case 'json':
       return JSON.stringify(diff);
     default:
-      return recursive(diff);
+      return stylish(diff);
   }
 };
 

@@ -1,5 +1,4 @@
 plugins:
-    # https://github.com/jest-community/eslint-plugin-jest
     - jest
 
 env:
@@ -9,6 +8,10 @@ extends:
     - 'airbnb-base'
     - 'plugin:jest/recommended'
 
+parserOptions:
+    ecmaVersion: 2020
+
 rules:
     no-console: 0
     import/extensions: 0
+    no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
