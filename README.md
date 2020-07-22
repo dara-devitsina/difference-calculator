@@ -7,9 +7,16 @@ Possible file formats: json, yaml and ini
 
 ## Install ##
 
-Using node version 14.x:
+To install Difference Calculator the following soft is required:
+* node version 14.0 or above
+* npm version 6.0 or above
+* make utility
+
+Clone this repo and run:
 ```
-$ make install
+make install
+make publish
+make link
 ```
 
 ## Usage ##
