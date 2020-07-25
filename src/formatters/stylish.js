@@ -27,16 +27,7 @@ const stylish = (tree) => {
             throw new Error(`Unknown status: '${item.type}'!`);
         }
       }
-      return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children.sort((a, b) => {
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        } return 0;
-      }), depth + 4)}`;
+      return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children, depth + 4)}`;
     });
 
     return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;

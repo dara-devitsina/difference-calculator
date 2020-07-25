@@ -34,7 +34,7 @@ const plain = (tree) => {
       }
       return iter(item.children, `${newAncestry}.`);
     });
-    return result.sort().join('\n');
+    return result.join('\n');
   };
   return iter(tree, '');
 };

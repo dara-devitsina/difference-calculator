@@ -21,7 +21,7 @@ const buildDiff = (file1, file2) => {
         name: key, oldValue: file1[key], newValue: file2[key], type: 'modified',
       };
     });
-  return keys;
+  return _.sortBy(keys, 'name');
 };
 
 export default buildDiff;
