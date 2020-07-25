@@ -1,9 +1,7 @@
 #!/usr/bin/env node
-import pkg from 'commander';
+import program from 'commander';
 
 import genDiff from '../index.js';
-
-const { program } = pkg;
 
 program
   .version('1.0.0')

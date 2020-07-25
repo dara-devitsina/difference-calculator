@@ -14,7 +14,7 @@
   "license": "ISC",
   "type": "module",
   "bin": {
-    "gendiff": "src/bin/gendiff.js"
+    "gendiff": "bin/gendiff.js"
   },
   "bugs": {
     "url": "https://github.com/dara-devitsina/frontend-project-lvl2/issues"

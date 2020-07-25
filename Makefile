@@ -13,9 +13,6 @@ lint:
 fix-lint:
 	npx eslint . --fix
 
-publish:
-	npm publish --dry-run
-
 link:
 	npm link
 

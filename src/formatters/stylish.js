@@ -13,18 +13,18 @@ const stylish = (tree) => {
   const iter = (node, depth) => {
     const space = ' ';
     const result = node.map((item) => {
-      if (item.status !== 'nested object') {
-        switch (item.status) {
+      if (item.type !== 'nested object') {
+        switch (item.type) {
           case 'added':
             return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value, depth)}`;
           case 'deleted':
             return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.value, depth)}`;
           case 'modified':
-            return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.before, depth)}\n${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.after, depth)}`;
+            return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.oldValue, depth)}\n${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.newValue, depth)}`;
           case 'unmodified':
             return `${space.repeat(depth + 4)}${item.name}: ${stringify(item.value, depth)}`;
           default:
-            throw new Error(`Unknown status: '${item.status}'!`);
+            throw new Error(`Unknown status: '${item.type}'!`);
         }
       }
       return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children.sort((a, b) => {

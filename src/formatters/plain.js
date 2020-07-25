@@ -18,18 +18,18 @@ const plain = (tree) => {
     const result = node.flatMap((item) => {
       const newAncestry = `${ancestry}${item.name}`;
 
-      if (item.status !== 'nested object') {
-        switch (item.status) {
+      if (item.type !== 'nested object') {
+        switch (item.type) {
           case 'added':
             return `Property '${newAncestry}' was added with value: ${normalize(item.value)}`;
           case 'deleted':
             return `Property '${newAncestry}' was removed`;
           case 'modified':
-            return `Property '${newAncestry}' was updated. From ${normalize(item.before)} to ${normalize(item.after)}`;
+            return `Property '${newAncestry}' was updated. From ${normalize(item.oldValue)} to ${normalize(item.newValue)}`;
           case 'unmodified':
             return [];
           default:
-            throw new Error(`Unknown status: '${item.status}'!`);
+            throw new Error(`Unknown status: '${item.type}'!`);
         }
       }
       return iter(item.children, `${newAncestry}.`);
