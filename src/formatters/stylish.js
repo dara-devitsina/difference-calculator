@@ -9,11 +9,11 @@ const stringify = (item, currentDepth) => {
   return item;
 };
 
-const stylish = (tree) => {
+const stylish = (diffTree) => {
   const iter = (node, depth) => {
     const space = ' ';
     const result = node.map((item) => {
-      if (item.type !== 'nested object') {
+      if (item.type !== 'nested') {
         switch (item.type) {
           case 'added':
             return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value, depth)}`;
@@ -32,7 +32,7 @@ const stylish = (tree) => {
 
     return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
   };
-  return iter(tree, 0);
+  return iter(diffTree, 0);
 };
 
 export default stylish;

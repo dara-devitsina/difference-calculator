@@ -1,16 +1,17 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
 
-const format = (diff, neededFormat) => {
-  switch (neededFormat) {
+const toFormat = (diffTree, outputFormat) => {
+  switch (outputFormat) {
+    case 'stylish':
+      return stylish(diffTree);
     case 'plain':
-      return plain(diff);
+      return plain(diffTree);
     case 'json':
-      // return JSON.stringify(diff, null, '\t');
-      return JSON.stringify(diff);
+      return JSON.stringify(diffTree);
     default:
-      return stylish(diff);
+      throw new Error(`Unknown format: '${outputFormat}'!`);
   }
 };
 
-export default format;
+export default toFormat;

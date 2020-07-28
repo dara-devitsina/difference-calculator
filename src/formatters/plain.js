@@ -13,12 +13,12 @@ const normalize = (item) => {
   }
 };
 
-const plain = (tree) => {
+const plain = (diffTree) => {
   const iter = (node, ancestry) => {
     const result = node.flatMap((item) => {
       const newAncestry = `${ancestry}${item.name}`;
 
-      if (item.type !== 'nested object') {
+      if (item.type !== 'nested') {
         switch (item.type) {
           case 'added':
             return `Property '${newAncestry}' was added with value: ${normalize(item.value)}`;
@@ -36,7 +36,7 @@ const plain = (tree) => {
     });
     return result.join('\n');
   };
-  return iter(tree, '');
+  return iter(diffTree, '');
 };
 
 export default plain;

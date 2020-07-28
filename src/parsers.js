@@ -1,38 +1,28 @@
 import _ from 'lodash';
-import fs from 'fs';
-import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const numberParse = (object) => {
-  const entries = Object.entries(object);
-
-  const result = entries.reduce((acc, [key, value]) => {
-    if (!_.isObject(value)) {
-      const parsedValue = Number.parseInt(value, 10);
-      if (Number.isNaN(parsedValue)) {
-        return { ...acc, [key]: value };
-      } return { ...acc, [key]: Number.parseInt(value, 10) };
+const numberParse = (object) => _.mapValues(object, (value) => {
+  if (!_.isObject(value)) {
+    const parsedValue = Number.parseFloat(value);
+    if (Number.isNaN(parsedValue)) {
+      return value;
     }
-    return { ...acc, [key]: numberParse(value) };
-  }, {});
-  return result;
-};
+    return Number.parseFloat(value);
+  }
+  return numberParse(value);
+});
 
-const parse = (data) => {
-  const file = fs.readFileSync(data, 'utf8');
-  const format = path.extname(data);
-  switch (format) {
+const parse = (data, extension) => {
+  switch (extension) {
     case '.json':
-      return JSON.parse(file);
-    case '':
-      return JSON.parse(file);
+      return JSON.parse(data);
     case '.yml':
-      return yaml.safeLoad(file);
+      return yaml.safeLoad(data);
     case '.ini':
-      return numberParse(ini.parse(file));
+      return numberParse(ini.parse(data));
     default:
-      throw new Error(`Unknown format: '${format}'!`);
+      throw new Error(`Unknown format: '${extension}'!`);
   }
 };
 

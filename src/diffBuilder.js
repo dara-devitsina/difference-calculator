@@ -15,7 +15,7 @@ const buildDiff = (file1, file2) => {
         return { name: key, value: file1[key], type: 'unmodified' };
       }
       if (_.isObject(file1[key]) && _.isObject(file2[key])) {
-        return { name: key, children: buildDiff(file1[key], file2[key]), type: 'nested object' };
+        return { name: key, children: buildDiff(file1[key], file2[key]), type: 'nested' };
       }
       return {
         name: key, oldValue: file1[key], newValue: file2[key], type: 'modified',
