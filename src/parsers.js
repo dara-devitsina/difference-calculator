@@ -12,8 +12,8 @@ import ini from 'ini';
 const parseNumber = (object) => _.mapValues(object, (value) => (!_.isObject(value)
   ? Number.parseFloat(value) || value : parseNumber(value)));
 
-const parse = (data, format) => {
-  switch (format) {
+const parse = (data, inputFormat) => {
+  switch (inputFormat) {
     case 'json':
       return JSON.parse(data);
     case 'yml':
@@ -21,7 +21,7 @@ const parse = (data, format) => {
     case 'ini':
       return parseNumber(ini.parse(data));
     default:
-      throw new Error(`Unknown format: '${format}'!`);
+      throw new Error(`Unknown format: '${inputFormat}'!`);
   }
 };
 
