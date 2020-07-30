@@ -1,39 +1,36 @@
-const normalize = (item) => {
-  switch (typeof item) {
-    case 'boolean':
-      return item;
-    case 'number':
-      return item;
-    case 'string':
-      return `'${item}'`;
-    case 'object':
-      return '[complex value]';
-    default:
-      throw new Error(`Unknown type: '${typeof item}'!`);
+import _ from 'lodash';
+
+const prettify = (item) => {
+  if (_.isString(item)) {
+    return `'${item}'`;
   }
+  if (_.isObject(item)) {
+    return '[complex value]';
+  }
+  return item;
 };
 
 const plain = (diffTree) => {
-  const iter = (node, ancestry) => {
-    const result = node.flatMap((item) => {
-      const newAncestry = `${ancestry}${item.name}`;
+  const iter = (tree, node) => {
+    const result = tree.map((item) => {
+      const newNode = `${node}${item.name}`;
 
-      if (item.type !== 'nested') {
-        switch (item.type) {
-          case 'added':
-            return `Property '${newAncestry}' was added with value: ${normalize(item.value)}`;
-          case 'deleted':
-            return `Property '${newAncestry}' was removed`;
-          case 'modified':
-            return `Property '${newAncestry}' was updated. From ${normalize(item.oldValue)} to ${normalize(item.newValue)}`;
-          case 'unmodified':
-            return [];
-          default:
-            throw new Error(`Unknown status: '${item.type}'!`);
-        }
+      switch (item.type) {
+        case 'added':
+          return `Property '${newNode}' was added with value: ${prettify(item.value)}`;
+        case 'deleted':
+          return `Property '${newNode}' was removed`;
+        case 'modified':
+          return `Property '${newNode}' was updated. From ${prettify(item.value1)} to ${prettify(item.value2)}`;
+        case 'unmodified':
+          return null;
+        case 'nested':
+          return iter(item.children, `${newNode}.`);
+        default:
+          throw new Error(`Unknown status: '${item.type}'!`);
       }
-      return iter(item.children, `${newAncestry}.`);
-    });
+    })
+      .filter((item) => item !== null);
     return result.join('\n');
   };
   return iter(diffTree, '');

@@ -10,26 +10,24 @@ const stringify = (item, currentDepth) => {
 };
 
 const stylish = (diffTree) => {
-  const iter = (node, depth) => {
+  const iter = (tree, depth) => {
     const space = ' ';
-    const result = node.map((item) => {
-      if (item.type !== 'nested') {
-        switch (item.type) {
-          case 'added':
-            return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value, depth)}`;
-          case 'deleted':
-            return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.value, depth)}`;
-          case 'modified':
-            return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.oldValue, depth)}\n${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.newValue, depth)}`;
-          case 'unmodified':
-            return `${space.repeat(depth + 4)}${item.name}: ${stringify(item.value, depth)}`;
-          default:
-            throw new Error(`Unknown status: '${item.type}'!`);
-        }
+    const result = tree.map((item) => {
+      switch (item.type) {
+        case 'added':
+          return `${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value, depth)}`;
+        case 'deleted':
+          return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.value, depth)}`;
+        case 'modified':
+          return `${space.repeat(depth + 2)}- ${item.name}: ${stringify(item.value1, depth)}\n${space.repeat(depth + 2)}+ ${item.name}: ${stringify(item.value2, depth)}`;
+        case 'unmodified':
+          return `${space.repeat(depth + 4)}${item.name}: ${stringify(item.value, depth)}`;
+        case 'nested':
+          return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children, depth + 4)}`;
+        default:
+          throw new Error(`Unknown status: '${item.type}'!`);
       }
-      return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children, depth + 4)}`;
     });
-
     return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
   };
   return iter(diffTree, 0);

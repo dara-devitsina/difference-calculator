@@ -1,7 +1,7 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
 
-const toFormat = (diffTree, outputFormat) => {
+const format = (diffTree, outputFormat) => {
   switch (outputFormat) {
     case 'stylish':
       return stylish(diffTree);
@@ -14,4 +14,4 @@ const toFormat = (diffTree, outputFormat) => {
   }
 };
 
-export default toFormat;
+export default format;

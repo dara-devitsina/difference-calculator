@@ -2,27 +2,26 @@ import _ from 'lodash';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const numberParse = (object) => _.mapValues(object, (value) => {
+/* const parseNumber = (object) => _.mapValues(object, (value) => {
   if (!_.isObject(value)) {
-    const parsedValue = Number.parseFloat(value);
-    if (Number.isNaN(parsedValue)) {
-      return value;
-    }
-    return Number.parseFloat(value);
+    return Number.parseFloat(value) || value;
   }
-  return numberParse(value);
-});
+  return parseNumber(value);
+}); */
 
-const parse = (data, extension) => {
-  switch (extension) {
-    case '.json':
+const parseNumber = (object) => _.mapValues(object, (value) => (!_.isObject(value)
+  ? Number.parseFloat(value) || value : parseNumber(value)));
+
+const parse = (data, format) => {
+  switch (format) {
+    case 'json':
       return JSON.parse(data);
-    case '.yml':
+    case 'yml':
       return yaml.safeLoad(data);
-    case '.ini':
-      return numberParse(ini.parse(data));
+    case 'ini':
+      return parseNumber(ini.parse(data));
     default:
-      throw new Error(`Unknown format: '${extension}'!`);
+      throw new Error(`Unknown format: '${format}'!`);
   }
 };
 
