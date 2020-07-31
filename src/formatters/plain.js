@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const prettify = (item) => {
+const stringify = (item) => {
   if (_.isString(item)) {
     return `'${item}'`;
   }
@@ -11,27 +11,26 @@ const prettify = (item) => {
 };
 
 const plain = (diffTree) => {
-  const iter = (tree, node) => {
-    const result = tree.map((item) => {
-      const newNode = `${node}${item.name}`;
+  const iter = (tree, name) => {
+    const result = tree.map((node) => {
+      const newNodeName = `${name}${node.name}`;
 
-      switch (item.type) {
+      switch (node.type) {
         case 'added':
-          return `Property '${newNode}' was added with value: ${prettify(item.value)}`;
+          return `Property '${newNodeName}' was added with value: ${stringify(node.value)}`;
         case 'deleted':
-          return `Property '${newNode}' was removed`;
+          return `Property '${newNodeName}' was removed`;
         case 'modified':
-          return `Property '${newNode}' was updated. From ${prettify(item.value1)} to ${prettify(item.value2)}`;
+          return `Property '${newNodeName}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
         case 'unmodified':
           return null;
         case 'nested':
-          return iter(item.children, `${newNode}.`);
+          return iter(node.children, `${newNodeName}.`);
         default:
-          throw new Error(`Unknown status: '${item.type}'!`);
+          throw new Error(`Unknown status: '${node.type}'!`);
       }
-    })
-      .filter((item) => item !== null);
-    return result.join('\n');
+    });
+    return result.filter((item) => item).join('\n');
   };
   return iter(diffTree, '');
 };
