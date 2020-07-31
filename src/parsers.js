@@ -3,14 +3,15 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 
 /* const parseNumber = (object) => _.mapValues(object, (value) => {
-  if (!_.isObject(value)) {
-    return Number.parseFloat(value) || value;
+  if (_.isObject(value)) {
+    return parseNumber(value);
   }
-  return parseNumber(value);
+  return Number.parseFloat(value) || value;
 }); */
 
-const parseNumber = (object) => _.mapValues(object, (value) => (!_.isObject(value)
-  ? Number.parseFloat(value) || value : parseNumber(value)));
+const parseNumber = (object) => _.mapValues(object, (value) => (_.isObject(value)
+  ? parseNumber(value)
+  : Number.parseFloat(value) || value));
 
 const parse = (data, inputFormat) => {
   switch (inputFormat) {
