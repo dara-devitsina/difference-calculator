@@ -1,15 +1,17 @@
 import _ from 'lodash';
 
-const stringify = (item, currentDepth) => {
-  if (_.isObject(item)) {
-    const space = ' ';
-    const [key, value] = Object.entries(item).flat();
-    return `{\n${space.repeat(currentDepth + 8)}${key}: ${value}\n${space.repeat(currentDepth + 4)}}`;
-  }
-  return item;
+const stringify = (item, space = ' ', depth = 0) => {
+  const entries = Object.entries(item);
+  const result = entries.map(([key, value]) => {
+    if (!_.isObject(value)) {
+      return `${space.repeat(depth + 1)}${key}: ${value}`;
+    }
+    return `${space.repeat(depth + 1)}${key}: ${stringify(value, space, depth + 1)}`;
+  });
+  return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
 };
 
-const stylish = (diffTree) => {
+/* const stylish = (diffTree) => {
   const iter = (tree, depth) => {
     const space = ' ';
     const result = tree.map((item) => {
@@ -25,12 +27,39 @@ const stylish = (diffTree) => {
         case 'nested':
           return `${space.repeat(depth + 4)}${item.name}: ${iter(item.children, depth + 4)}`;
         default:
-          throw new Error(`Unknown status: '${item.type}'!`);
+          throw new Error(`Unknown type: '${item.type}'!`);
       }
     });
     return `{\n${result.join('\n')}\n${space.repeat(depth)}}`;
   };
   return iter(diffTree, 0);
-};
+}; */
 
 export default stylish;
+
+/* console.log(stringify({
+  "common": {
+    "setting1": "Value 1",
+    "setting2": 200,
+    "setting3": true,
+    "setting6": {
+      "key": "value",
+      "doge": {
+        "wow": "too much"
+      }
+    }
+  },
+  "group1": {
+    "baz": "bas",
+    "foo": "bar",
+    "nest": {
+      "key": "value"
+    }
+  },
+  "group2": {
+    "abc": 12345,
+    "deep": {
+      "id": 45
+    }
+  }
+}, ' ')); */
