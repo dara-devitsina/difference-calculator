@@ -10,9 +10,12 @@ const genDiff = (filePath1, filePath2, outputFormat) => {
   const inputFormat1 = path.extname(filePath1).slice(1);
   const inputFormat2 = path.extname(filePath2).slice(1);
   const diffTree = buildDiff(parse(file1, inputFormat1), parse(file2, inputFormat2));
-  console.log(diffTree);
+  // console.log(diffTree);
 
   return format(diffTree, outputFormat);
 };
 
 export default genDiff;
+
+const spaces = '  ';
+console.log(spaces.repeat(3));

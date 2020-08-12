@@ -27,7 +27,7 @@ const plain = (diffTree) => {
         case 'nested':
           return iter(node.children, `${newNodeName}.`);
         default:
-          throw new Error(`Unknown status: '${node.type}'!`);
+          throw new Error(`Unknown type: '${node.type}'!`);
       }
     });
     return result.filter((item) => item).join('\n');
