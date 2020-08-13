@@ -9,33 +9,25 @@ const prefixes = {
 };
 const openSymbol = '{';
 const closeSymbol = '}';
-const additionalSpaces = '  ';
 
-const addPrefix = (symbol, indent, prefix = ' ') => `${indent}${prefix} ${symbol}`;
+const addPrefix = (symbol, indent, prefix = '') => `${indent}${prefix}${symbol}`;
 
-const stringify = (node, space) => {
-  if (_.isObject(node)) {
-    const iter = (item, depth) => {
-      const entries = Object.entries(item);
-      const result = entries.flatMap(([key, value]) => {
-        if (!_.isObject(value)) {
-          // формируем строку вида `{отступ}{префикс} {имя}: {значение}`,
-          // где отступ - это кол-во пробелов, пришедшее из stylish + additionalSpaces,
-          // "умноженные" на глубина + 2
-          // таким образом, с каждым увеличением глубины на 2 отступ увеличивается на 4 пробела
-          return `${addPrefix(key, `${space}${additionalSpaces.repeat(depth + keyOffset)}`)}: ${value}`;
-        }
-        return `${addPrefix(key, `${space}${additionalSpaces.repeat(depth + keyOffset)}`)}: ${iter(value, depth + keyOffset)}`;
+const stringify = (node, space, depth = 0) => {
+  if (!_.isObject(node)) {
+    return node;
+  }
+  const entries = Object.entries(node);
+  const result = entries.flatMap(([key, value]) => {
+    if (!_.isObject(value)) {
+      return `${addPrefix(key, space.repeat(depth + 1))}: ${value}`;
+    }
+    return `${addPrefix(key, space.repeat(depth + 1))}: ${stringify(value, space, depth + 1)}`;
       });
       return [
         `${openSymbol}`,
         `${result.join('\n')}`,
-        `${addPrefix(closeSymbol, space.repeat(depth + 1))}`,
+        `${addPrefix(closeSymbol, space.repeat(depth))}`,
       ].join('\n');
-    };
-    return iter(node, 0);
-  }
-  return node;
 };
 
 const stylish = (diffTree) => {
@@ -71,29 +63,29 @@ const stylish = (diffTree) => {
 
 export default stylish;
 
-// console.log(stringify({
-//   common: {
-//     setting1: 'Value 1',
-//     setting2: 200,
-//     setting3: true,
-//     setting6: {
-//       key: 'value',
-//       doge: {
-//         wow: 'too much',
-//       },
-//     },
-//   },
-//   group1: {
-//     baz: 'bas',
-//     foo: 'bar',
-//     nest: {
-//       key: 'value',
-//     },
-//   },
-//   group2: {
-//     abc: 12345,
-//     deep: {
-//       id: 45,
-//     },
-//   },
-// }, ' '));
+console.log(stringify({
+  common: {
+    setting1: 'Value 1',
+    setting2: 200,
+    setting3: true,
+    setting6: {
+      key: 'value',
+      doge: {
+        wow: 'too much',
+      },
+    },
+  },
+  group1: {
+    baz: 'bas',
+    foo: 'bar',
+    nest: {
+      key: 'value',
+    },
+  },
+  group2: {
+    abc: 12345,
+    deep: {
+      id: 45,
+    },
+  },
+}, ' '));
