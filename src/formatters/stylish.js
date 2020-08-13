@@ -17,38 +17,12 @@ const stringify = (node, space, depth = 0) => {
     return node;
   }
   const entries = Object.entries(node);
-  const result = entries.flatMap(([key, value]) => {
-    if (!_.isObject(value)) {
-      return `${addPrefix(key, space.repeat(depth + 1))}: ${value}`;
-    }
-    return `${addPrefix(key, space.repeat(depth + 1))}: ${stringify(value, space, depth + 1)}`;
-  });
   return [
     openSymbol,
-    result.join('\n'),
+    ...(entries.flatMap(([key, value]) => `${addPrefix(key, space.repeat(depth + 1))}: ${stringify(value, space, depth + 1)}`)),
     `${addPrefix(closeSymbol, space.repeat(depth))}`,
   ].join('\n');
 };
-
-// const stringify = (node, space, depth = 0) => {
-//   if (!_.isObject(node)) {
-//     return node;
-//   }
-//   const entries = Object.entries(node);
-//   const result = entries.flatMap(([key, value]) => {
-//     if (!_.isObject(value)) {
-//       return `${addPrefix(key, space.repeat(depth + 1))}: ${value}`;
-//     }
-//     return [
-//       openSymbol,
-//       `${addPrefix(key, space.repeat(depth + 1))}: ${openSymbol}`,
-//       ...(stringify(value, space, depth + 1)),
-//       `${addPrefix(closeSymbol, space.repeat(depth))}`,
-//     ]
-//   });
-//   console.log(result);
-//   return result;
-// };
 
 const stylish = (diffTree) => {
   const iter = (tree, depth) => {
@@ -82,6 +56,8 @@ const stylish = (diffTree) => {
 };
 
 export default stylish;
+
+console.log(stringify({ hello: 'world' }, ' '));
 
 console.log(stringify({
   common: {
