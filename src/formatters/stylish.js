@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const indentSymbol = ' ';
+const indentSymbol = '  ';
 const keyOffset = 2;
 const prefixes = {
   added: '+',
@@ -10,7 +10,7 @@ const prefixes = {
 const openSymbol = '{';
 const closeSymbol = '}';
 
-const addPrefix = (symbol, indent, prefix = '') => `${indent}${prefix}${symbol}`;
+const addPrefix = (symbol, indent, prefix = ' ') => `${indent}${prefix} ${symbol}`;
 
 const stringify = (node, space, depth = 0) => {
   if (!_.isObject(node)) {
@@ -26,24 +26,25 @@ const stringify = (node, space, depth = 0) => {
 
 const stylish = (diffTree) => {
   const iter = (tree, depth) => {
-    const indent = indentSymbol.repeat(depth + keyOffset);
+    const indent = indentSymbol.repeat(depth);
+    const objectIndent = indentSymbol.repeat(depth + keyOffset);
+    // console.log(depth + keyOffset);
 
     const result = tree.flatMap((item) => {
       switch (item.type) {
         case 'added':
           // формируем строку вида `{отступ}{префикс} {имя}: {значение}`
-          return `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value, indent)}`;
+          return `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value, objectIndent)}`;
         case 'deleted':
-          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value, indent)}`;
+          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value, objectIndent)}`;
         case 'modified':
-          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value1, indent)}\n${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value2, indent)}`;
+          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value1, objectIndent)}\n${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value2, objectIndent)}`;
         case 'unmodified':
-          return `${addPrefix(item.name, indent, prefixes.unmodified)}: ${stringify(item.value, indent)}`;
+          return `${addPrefix(item.name, indent, prefixes.unmodified)}: ${stringify(item.value, objectIndent)}`;
         case 'nested':
           return [
             `${addPrefix(item.name, indent, prefixes.unmodified)}: ${openSymbol}`,
-            ...(iter(item.children, depth + 4)), // с каждой итерацией прибавляем к глубине 4,
-            // таким образом indent у всех детей с каждым погружением увеличивается на 4 пробела
+            ...(iter(item.children, depth + keyOffset)),
             `${addPrefix(closeSymbol, indent)}`,
           ].join('\n');
         default:
@@ -52,36 +53,36 @@ const stylish = (diffTree) => {
     });
     return result;
   };
-  return `{\n${iter(diffTree, 0).join('\n')}\n}`;
+  return `{\n${iter(diffTree, 1).join('\n')}\n}`;
 };
 
 export default stylish;
 
-console.log(stringify({ hello: 'world' }, ' '));
+// console.log(stringify({ hello: 'world' }, ' '));
 
-console.log(stringify({
-  common: {
-    setting1: 'Value 1',
-    setting2: 200,
-    setting3: true,
-    setting6: {
-      key: 'value',
-      doge: {
-        wow: 'too much',
-      },
-    },
-  },
-  group1: {
-    baz: 'bas',
-    foo: 'bar',
-    nest: {
-      key: 'value',
-    },
-  },
-  group2: {
-    abc: 12345,
-    deep: {
-      id: 45,
-    },
-  },
-}, ' '));
+// console.log(stringify({
+//   common: {
+//     setting1: 'Value 1',
+//     setting2: 200,
+//     setting3: true,
+//     setting6: {
+//       key: 'value',
+//       doge: {
+//         wow: 'too much',
+//       },
+//     },
+//   },
+//   group1: {
+//     baz: 'bas',
+//     foo: 'bar',
+//     nest: {
+//       key: 'value',
+//     },
+//   },
+//   group2: {
+//     abc: 12345,
+//     deep: {
+//       id: 45,
+//     },
+//   },
+// }, ' '));
