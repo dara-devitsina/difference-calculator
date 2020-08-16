@@ -13,12 +13,12 @@ const closeSymbol = '}';
 const addPrefix = (symbol, indent, prefix = ' ') => `${indent}${prefix} ${symbol}`;
 
 const stringify = (node, space, depth = 0) => {
- // console.log(depth);
+  // console.log(depth);
   if (!_.isObject(node)) {
     return node;
   }
   const entries = Object.entries(node);
- // console.log(entries);
+  // console.log(entries);
 
   return [
     openSymbol,
@@ -32,7 +32,7 @@ const stylish = (diffTree) => {
     const indent = indentSymbol.repeat(depth);
 
     const result = tree.flatMap((item) => {
-     // console.log(depth);
+      // console.log(depth);
 
       switch (item.type) {
         case 'added':
@@ -50,7 +50,7 @@ const stylish = (diffTree) => {
         case 'nested':
           return [
             `${addPrefix(item.name, indent, prefixes.unmodified)}: ${openSymbol}`,
-            ...(iter(item.children, depth + 2)),
+            ...(iter(item.children, depth + keyOffset)),
             `${addPrefix(closeSymbol, indent)}`,
           ];
         default:
