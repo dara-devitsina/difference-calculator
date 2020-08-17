@@ -12,18 +12,16 @@ const closeSymbol = '}';
 
 const addPrefix = (symbol, indent, prefix = ' ') => `${indent}${prefix} ${symbol}`;
 
-const stringify = (node, space, depth = 0) => {
-  // console.log(depth);
+const stringify = (node, space) => {
   if (!_.isObject(node)) {
     return node;
   }
   const entries = Object.entries(node);
-  // console.log(entries);
-
+  const nestedIndent = addPrefix(indentSymbol, space);
   return [
     openSymbol,
-    ...(entries.flatMap(([key, value]) => `${addPrefix(key, space.repeat(depth + 1))}: ${stringify(value, space, depth + 1)}`)),
-    `${addPrefix(closeSymbol, space.repeat(depth))}`,
+    ...(entries.flatMap(([key, value]) => `${addPrefix(key, nestedIndent)}: ${stringify(value, nestedIndent)}`)),
+    `${addPrefix(closeSymbol, space)}`,
   ].join('\n');
 };
 
@@ -37,16 +35,16 @@ const stylish = (diffTree) => {
       switch (item.type) {
         case 'added':
           // формируем строку вида `{отступ}{префикс} {имя}: {значение}`
-          return `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value, indentSymbol, depth)}`;
+          return `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value, indent)}`;
         case 'deleted':
-          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value, indentSymbol, depth)}`;
+          return `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value, indent)}`;
         case 'modified':
           return [
-            `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value1, indentSymbol, depth)}`,
-            `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value2, indentSymbol, depth)}`,
+            `${addPrefix(item.name, indent, prefixes.deleted)}: ${stringify(item.value1, indent)}`,
+            `${addPrefix(item.name, indent, prefixes.added)}: ${stringify(item.value2, indent)}`,
           ];
         case 'unmodified':
-          return `${addPrefix(item.name, indent, prefixes.unmodified)}: ${stringify(item.value, indentSymbol, depth)}`;
+          return `${addPrefix(item.name, indent, prefixes.unmodified)}: ${stringify(item.value, indent)}`;
         case 'nested':
           return [
             `${addPrefix(item.name, indent, prefixes.unmodified)}: ${openSymbol}`,
