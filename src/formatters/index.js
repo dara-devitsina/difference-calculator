@@ -3,7 +3,7 @@ import plain from './plain.js';
 
 const format = (diffTree, outputFormat) => {
   switch (outputFormat) {
-    case '':
+    case 'stylish':
       return stylish(diffTree);
     case 'plain':
       return plain(diffTree);

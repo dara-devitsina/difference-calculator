@@ -24,7 +24,7 @@ const stringify = (node, space) => {
   ].join('\n');
 };
 
-const stylish = (diffTree) => {
+const makeStylish = (diffTree) => {
   const iter = (tree, depth) => tree.flatMap((item) => {
     const indent = indentSymbol.repeat(depth);
     switch (item.type) {
@@ -51,9 +51,9 @@ const stylish = (diffTree) => {
   });
   return [
     openSymbol,
-    iter(diffTree, 1).join('\n'),
+    ...(iter(diffTree, 1)),
     closeSymbol,
   ];
 };
 
-export default (tree) => stylish(tree).join('\n');
+export default (tree) => makeStylish(tree).join('\n');
