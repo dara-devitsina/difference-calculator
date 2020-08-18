@@ -29,8 +29,11 @@ test.each(formats)(
   (format) => {
     const filePath1 = getFixturePath(`file1.${format}`);
     const filePath2 = getFixturePath(`file2.${format}`);
-    expect(genDiff(filePath1, filePath2, '')).toEqual(resultStylish);
+    expect(genDiff(filePath1, filePath2, 'stylish')).toEqual(resultStylish);
     expect(genDiff(filePath1, filePath2, 'plain')).toEqual(resultPlain);
     expect(genDiff(filePath1, filePath2, 'json')).toEqual(resultJson);
+    expect(() => {
+      (genDiff(filePath1, filePath2, ''));
+    }).toThrowError(/Unknown/);
   },
 );
