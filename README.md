@@ -15,7 +15,6 @@ To install Difference Calculator the following soft is required:
 Clone this repo and run:
 ```
 make install
-make publish
 make link
 ```
 
