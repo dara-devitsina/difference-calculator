@@ -21,15 +21,15 @@ beforeAll(() => {
 });
 
 const formats = [
-  ['.json'], ['.yml'], ['.ini'],
+  ['json'], ['yml'], ['ini'],
 ];
 
 test.each(formats)(
   'test %s',
   (format) => {
-    const filePath1 = getFixturePath(`file1${format}`);
-    const filePath2 = getFixturePath(`file2${format}`);
-    expect(genDiff(filePath1, filePath2, 'stylish')).toEqual(resultStylish);
+    const filePath1 = getFixturePath(`file1.${format}`);
+    const filePath2 = getFixturePath(`file2.${format}`);
+    expect(genDiff(filePath1, filePath2, '')).toEqual(resultStylish);
     expect(genDiff(filePath1, filePath2, 'plain')).toEqual(resultPlain);
     expect(genDiff(filePath1, filePath2, 'json')).toEqual(resultJson);
   },
