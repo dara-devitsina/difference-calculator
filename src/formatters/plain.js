@@ -11,28 +11,29 @@ const stringify = (item) => {
 };
 
 const plain = (diffTree) => {
-  const iter = (tree, name) => {
-    const result = tree.map((node) => {
-      const newNodeName = `${name}${node.name}`;
+  const iter = (tree, parentNodeName) => {
+    const result = tree.flatMap((node) => {
+      const currentNodeName = node.name;
+      const propertyName = `${parentNodeName}${currentNodeName}`;
 
       switch (node.type) {
         case 'added':
-          return `Property '${newNodeName}' was added with value: ${stringify(node.value)}`;
+          return `Property '${propertyName}' was added with value: ${stringify(node.value)}`;
         case 'deleted':
-          return `Property '${newNodeName}' was removed`;
+          return `Property '${propertyName}' was removed`;
         case 'modified':
-          return `Property '${newNodeName}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
+          return `Property '${propertyName}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
         case 'unmodified':
           return null;
         case 'nested':
-          return iter(node.children, `${newNodeName}.`);
+          return iter(node.children, `${propertyName}.`);
         default:
           throw new Error(`Unknown type: '${node.type}'!`);
       }
     });
-    return result.filter((item) => item).join('\n');
+    return result.filter((item) => item);
   };
   return iter(diffTree, '');
 };
 
-export default plain;
+export default (tree) => plain(tree).join('\n');
