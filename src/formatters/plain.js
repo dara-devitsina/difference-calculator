@@ -10,7 +10,7 @@ const stringify = (item) => {
   return item;
 };
 
-const plain = (diffTree) => {
+const makePlain = (diffTree) => {
   const iter = (tree, parentNodeName) => {
     const result = tree.flatMap((node) => {
       const currentNodeName = node.name;
@@ -36,4 +36,4 @@ const plain = (diffTree) => {
   return iter(diffTree, '');
 };
 
-export default (tree) => plain(tree).join('\n');
+export default (tree) => makePlain(tree).join('\n');
